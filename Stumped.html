@@ -547,15 +547,21 @@
 
     let audioWokenUp = false;
 
+    // Force browsers to optimize audio elements for immediate playback effects rather than long-form streaming
+    const countdownAudio = new Audio(BASE_URL + 'countdown.mp3'); countdownAudio.preload = "auto";
+    const passAudio = new Audio(BASE_URL + 'pass.mp3'); passAudio.preload = "auto";
+    const lobbyAudio = new Audio(BASE_URL + 'lobby.mp3'); lobbyAudio.loop = true; lobbyAudio.preload = "auto";
+    const gameplayAudio = new Audio(BASE_URL + 'gameplay.mp3'); gameplayAudio.loop = true; gameplayAudio.preload = "auto";
+
     selectCategory('random');
     applyAudioSettings();
 
-    // Responsive iOS audio pipeline setup
+    // Universal high-performance audio initializer pipeline
     function wakeUpMobileAudio() {
         if (audioWokenUp) return;
         
-        // Mobile browsers block simultaneous loads. We explicitly fetch them muted
-        // to prevent mixing distortion and immediate playback overlapping.
+        // Temporarily dropping volumes to 0 allows a true zero-latency hardware buffer connection 
+        // without causing track overlap distortion or unexpected sounds on first load.
         const originalMusicVol = lobbyAudio.volume;
         const originalSfxVol = countdownAudio.volume;
 
@@ -564,33 +570,19 @@
         countdownAudio.volume = 0;
         passAudio.volume = 0;
 
-        // Wake up each buffer safely without executing instant playback chains
-        lobbyAudio.play().then(() => {
-            lobbyAudio.pause();
-            lobbyAudio.currentTime = 0;
-            lobbyAudio.volume = originalMusicVol;
-            if (!gameActive && !isMuted) lobbyAudio.play().catch(() => {});
-        }).catch(() => {});
-
-        gameplayAudio.play().then(() => {
-            gameplayAudio.pause();
-            gameplayAudio.currentTime = 0;
-            gameplayAudio.volume = originalMusicVol;
-        }).catch(() => {});
-
-        countdownAudio.play().then(() => {
-            countdownAudio.pause();
-            countdownAudio.currentTime = 0;
-            countdownAudio.volume = originalSfxVol;
-        }).catch(() => {});
-
-        passAudio.play().then(() => {
-            passAudio.pause();
-            passAudio.currentTime = 0;
-            passAudio.volume = originalSfxVol;
-        }).catch(() => {});
-        
-        audioWokenUp = true;
+        // Fire all streams concurrently to wake up mobile background sound-cards instantly
+        Promise.all([
+            lobbyAudio.play().then(() => { lobbyAudio.pause(); lobbyAudio.currentTime = 0; lobbyAudio.volume = originalMusicVol; }),
+            gameplayAudio.play().then(() => { gameplayAudio.pause(); gameplayAudio.currentTime = 0; gameplayAudio.volume = originalMusicVol; }),
+            countdownAudio.play().then(() => { countdownAudio.pause(); countdownAudio.currentTime = 0; countdownAudio.volume = originalSfxVol; }),
+            passAudio.play().then(() => { passAudio.pause(); passAudio.currentTime = 0; passAudio.volume = originalSfxVol; })
+        ]).then(() => {
+            audioWokenUp = true;
+            // Instantly transition into the lobby theme once authorization passes
+            if (!gameActive && !isMuted) {
+                lobbyAudio.play().catch(() => {});
+            }
+        }).catch(e => console.log("Audio initialization pass queued."));
 
         window.removeEventListener('click', wakeUpMobileAudio);
         window.removeEventListener('touchstart', wakeUpMobileAudio);
@@ -599,7 +591,7 @@
     window.addEventListener('click', wakeUpMobileAudio);
     window.addEventListener('touchstart', wakeUpMobileAudio);
 
-    // Visibility state switch tracker logic
+    // Native app state-switch focus tracker
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
             lobbyAudio.pause();
@@ -689,7 +681,7 @@
         if (e.key === 'k' || e.key === 'K') passTurn(2);
     });
 
-    function triggerSubtleImpact(playerNum) {
+   function triggerSubtleImpact(playerNum) {
         const targetBtn = playerNum === 1 ? document.getElementById('p1-btn') : document.getElementById('p2-btn');
         const flashClass = playerNum === 1 ? 'btn-flash-white' : 'btn-flash-purple';
         
@@ -698,8 +690,12 @@
             targetBtn.classList.remove(flashClass);
         }, 120);
 
-        passAudio.currentTime = 0;
-        passAudio.play().catch(e => {});
+        if (!isMuted && audioWokenUp) {
+            // Setting this to play directly via a microtask avoids browser engine cycle bottlenecks
+            passAudio.pause();
+            passAudio.currentTime = 0;
+            setTimeout(() => { passAudio.play().catch(e => {}); }, 0);
+        }
     }
 
     function startRound() {
