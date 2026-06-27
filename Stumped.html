@@ -536,42 +536,50 @@
     };
 
     let activePool = [];
-    let p1Score = 0;
-    let p2Score = 0;
-    let activePlayer = 0; 
-    let maxRoundTime = 20; 
-    let timeLeft = 20;
-    let timerId = null;
-    let gameActive = false;
+    let p1Score = 0, p2Score = 0, activePlayer = 0; 
+    let maxRoundTime = 20, timeLeft = 20, timerId = null, gameActive = false;
+    let p1Name = "Player 1", p2Name = "Player 2", isMuted = false;
 
-    let p1Name = "Player 1";
-    let p2Name = "Player 2";
-
-    let isMuted = false;
+    // Create the HTML5 audio buffers globally
     const countdownAudio = new Audio(BASE_URL + 'countdown.mp3');
     const passAudio = new Audio(BASE_URL + 'pass.mp3');
-    const lobbyAudio = new Audio(BASE_URL + 'lobby.mp3');
-    lobbyAudio.loop = true;
-    const gameplayAudio = new Audio(BASE_URL + 'gameplay.mp3');
-    gameplayAudio.loop = true;
+    const lobbyAudio = new Audio(BASE_URL + 'lobby.mp3'); lobbyAudio.loop = true;
+    const gameplayAudio = new Audio(BASE_URL + 'gameplay.mp3'); gameplayAudio.loop = true;
+
+    let audioWokenUp = false;
 
     selectCategory('random');
     applyAudioSettings();
 
-    window.addEventListener('click', function initLobbyMusic() {
-        if (!gameActive && lobbyAudio.paused && !isMuted) {
+    // Universal iOS "Wake Up Call" engine
+    function wakeUpMobileAudio() {
+        if (audioWokenUp) return;
+        
+        // Playing and instantly pausing lets mobile Safari/Chrome download and cache paths securely
+        countdownAudio.play().then(() => countdownAudio.pause()).catch(() => {});
+        passAudio.play().then(() => passAudio.pause()).catch(() => {});
+        lobbyAudio.play().then(() => lobbyAudio.pause()).catch(() => {});
+        gameplayAudio.play().then(() => gameplayAudio.pause()).catch(() => {});
+        
+        audioWokenUp = true;
+        
+        // Start lobby loop instantly once allowed
+        if (!gameActive && !isMuted) {
             lobbyAudio.play().catch(e => {});
         }
-        window.removeEventListener('click', initLobbyMusic);
-    });
+    }
 
-    // Native Tab State Tracking: silences audio channels instantly on lock screen/home screen exit
+    // Attach user listeners to wake up audio on first touch
+    window.addEventListener('click', wakeUpMobileAudio);
+    window.addEventListener('touchstart', wakeUpMobileAudio);
+
+    // Native App Visibility State Tracker (fixes locking screen/app switching)
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
             lobbyAudio.pause();
             gameplayAudio.pause();
         } else {
-            if (!isMuted) {
+            if (!isMuted && audioWokenUp) {
                 if (gameActive) {
                     gameplayAudio.play().catch(e => {});
                 } else {
@@ -649,6 +657,12 @@
         if (gameActive) updateTurnUI();
     }
 
+    window.addEventListener('keydown', function(e) {
+        if (!gameActive) return;
+        if (e.key === 'd' || e.key === 'D') passTurn(1);
+        if (e.key === 'k' || e.key === 'K') passTurn(2);
+    });
+
     function triggerSubtleImpact(playerNum) {
         const targetBtn = playerNum === 1 ? document.getElementById('p1-btn') : document.getElementById('p2-btn');
         const flashClass = playerNum === 1 ? 'btn-flash-white' : 'btn-flash-purple';
@@ -667,7 +681,7 @@
 
         document.getElementById('start-btn').disabled = true;
 
-        // Force explicit stop on the lobby audio stream for responsive mobile tracking
+        // Force clear layout audio lines completely
         lobbyAudio.pause();
         lobbyAudio.currentTime = 0;
 
@@ -693,10 +707,12 @@
     function runGameTimer() {
         if (document.hidden) return; 
         
-        // Guarantee clean pipeline execution on mobile browser contexts
+        // Clean cycle trigger sequence handles mobile stream swaps natively
         gameplayAudio.pause();
         gameplayAudio.currentTime = 0;
-        gameplayAudio.play().catch(e => {});
+        if (!isMuted) {
+            gameplayAudio.play().catch(e => {});
+        }
 
         const randomWord = activePool[Math.floor(Math.random() * activePool.length)];
         document.getElementById('card-text').innerText = randomWord;
