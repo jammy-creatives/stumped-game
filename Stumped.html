@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stumped! - JammyCreatives</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 15px;
+            background: url('Assets/GameBackground.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        
+        #game-box {
+            width: 100%;
+            max-width: 500px;
+            background-color: #9876e0; /* Deep Purple Main Box */
+            border: 5px solid #ffffff;
+            border-radius: 24px;
+            padding: 15px; /* Compact height optimization */
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        /* Interactive Action Icons (Cog & Info) */
+        #settings-cog {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        #settings-cog:hover {
+            transform: rotate(45deg);
+        }
+
+        #info-icon {
+            position: absolute;
+            top: 58px; /* Stacked cleanly directly below the settings cog */
+            right: 20px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.2s ease;
+        }
+        #info-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Full-screen Responsive How-To-Play Modal Overlay */
+        #info-panel {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Premium dark dim block */
+            border-radius: 20px;
+            z-index: 120;
+            box-sizing: border-box;
+            padding: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+        .info-content-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #info-guide-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 3px solid #ffffff;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        .close-x-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 38px;
+            font-weight: bold;
+            color: #ffffff;
+            cursor: pointer;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            z-index: 130;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .close-x-btn:hover {
+            color: #e3dcf9;
+        }
+
+        /* Settings Overlay Panel */
+        #settings-panel {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(152, 118, 224, 0.98);
+            border-radius: 20px;
+            z-index: 90;
+            box-sizing: border-box;
+            padding: 25px 24px;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        #settings-panel h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .setting-section-title {
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #ffffff;
+            background: #a488e5;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-align: left;
+            margin-bottom: 12px;
+            border-left: 3px solid #ffffff;
+        }
+        .setting-row {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .setting-row label {
+            display: block;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #e3dcf9;
+        }
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .setting-slider {
+            flex-grow: 1;
+            accent-color: #ffffff;
+            cursor: pointer;
+        }
+        .setting-value {
+            font-weight: 800;
+            width: 45px;
+            text-align: right;
+        }
+
+        /* Integrated Category Selection Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .category-btn {
+            background-color: #ffffff;
+            color: #9876e0;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 10px 4px;
+            border-radius: 10px;
+            box-shadow: 0 3px 0 #a488e5;
+            border: none;
+            cursor: pointer;
+        }
+        .category-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #a488e5;
+        }
+        .category-btn.active-selection {
+            background-color: #e3dcf9;
+            border: 2px solid #ffffff;
+            box-shadow: none;
+        }
+        .category-btn.random-btn {
+            grid-column: span 2;
+            background-color: #e3dcf9;
+            font-size: 13px;
+        }
+
+        .close-settings-btn {
+            margin-top: auto;
+            background: #ffffff;
+            color: #9876e0;
+            padding: 12px;
+        }
+
+        /* Branding Configuration */
+        .game-logo {
+            max-width: 320px; /* Shrunk visually for layout safety */
+            height: auto;
+            margin: -10px auto -7px auto;
+            display: block;
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.2));
+        }
+        .company-logo {
+            max-width: 260px; /* Shrunk visually for layout safety */
+            height: auto;
+            margin: 15px auto 0 auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        /* Input Container */
+        #name-setup {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .name-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed #ffffff;
+            border-radius: 8px;
+            padding: 10px 0px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+        .name-input::placeholder {
+            color: #e3dcf9;
+            opacity: 0.8;
+        }
+        .name-input:focus {
+            background: #ffffff;
+            color: #9876e0;
+            border-style: solid;
+        }
+        
+        #scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background-color: #a488e5;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border: 2px solid #ffffff;
+        }
+        .p1-color { color: #ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .p2-color { color: #e3dcf9; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+
+        /* Centered Status Bar */
+        #pool-status-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        #active-pool-indicator {
+            font-size: 12px;
+            font-weight: bold;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
+        }
+        
+        #card {
+            background-color: #ffffff;
+            color: #9876e0;
+            min-height: 110px; /* Streamlined frame footprint */
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 0 #a488e5;
+            box-sizing: border-box;
+            border: 1px solid #e3dcf9;
+            line-height: 1.4;
+        }
+        
+        #card-image {
+            max-width: 120px;
+            max-height: 90px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 2px solid #9876e0;
+            display: none;
+        }
+
+        #timer-container {
+            width: 100%;
+            background-color: #a488e5;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 2px solid #ffffff;
+        }
+        #timer-bar {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            transition: width 0.1s linear;
+        }
+        #timer-text {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        #turn-indicator {
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            height: 26px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .btn {
+            background-color: #ffffff;
+            color: #9876e0;
+            border: none;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 14px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 5px 0 #a488e5;
+            transition: all 0.1s ease;
+        }
+        .btn:active { 
+            transform: translateY(3px); 
+            box-shadow: 0 2px 0 #a488e5;
+        }
+        
+        #start-btn {
+            background-color: #ffffff;
+            color: #9876e0;
+            font-size: 20px;
+            letter-spacing: 1px;
+            border: 2px solid #ffffff;
+        }
+        
+        .game-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .player-btn {
+            height: 75px; /* Streamlined frame footprint */
+            font-size: 17px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: background-color 0.1s ease, transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .player-btn span {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 6px;
+            font-weight: normal;
+        }
+        
+        #p1-btn { background-color: #ffffff; color: #9876e0; box-shadow: 0 5px 0 #a488e5;}
+        #p2-btn { background-color: #e3dcf9; color: #9876e0; box-shadow: 0 5px 0 #a488e5;}
+        
+        .btn-flash-white {
+            background-color: #ffffff !important;
+            box-shadow: 0 0 25px #ffffff, 0 5px 0 #a488e5 !important;
+            transform: scale(1.04);
+        }
+        .btn-flash-purple {
+            background-color: #a488e5 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 25px #a488e5, 0 5px 0 #ffffff !important;
+            transform: scale(1.04);
+        }
+
+        .player-btn:disabled, #start-btn:disabled {
+            background-color: #a488e5 !important;
+            color: #e3dcf9 !important;
+            cursor: not-allowed;
+            opacity: 0.4;
+            box-shadow: none !important;
+            transform: none !important;
+            border: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-box">
+    <img id="settings-cog" src="Assets/settings.png" alt="Settings" onclick="toggleSettingsPanel(true)">
+    <img id="info-icon" src="Assets/info.png" alt="How to Play Guide" onclick="toggleInfoPanel(true)">
+
+    <div id="info-panel">
+        <div class="info-content-wrapper">
+            <span class="close-x-btn" onclick="toggleInfoPanel(false)">&times;</span>
+            <img id="info-guide-img" src="Assets/FRONT.jpg" alt="How to Play Instructions">
+        </div>
+    </div>
+
+    <div id="settings-panel">
+        <h2>GAME SETTINGS</h2>
+        
+        <div class="setting-section-title">AUDIO CONFIGURATION</div>
+        <div class="setting-row">
+            <label for="music-volume">MUSIC VOLUME</label>
+            <div class="setting-control">
+                <input type="range" id="music-volume" class="setting-slider" min="0" max="100" value="10" oninput="applyAudioSettings()">
+                <span id="music-vol-val" class="setting-value">10%</span>
+            </div>
+        </div>
+
+        <div class="setting-row">
+            <label for="sfx-volume">SOUND EFFECTS VOLUME</label>
+            <div class="setting-control">
+                <input type="range" id="sfx-volume" class="setting-slider" min="0" max="100" value="50" oninput="applyAudioSettings()">
+                <span id="sfx-vol-val" class="setting-value">50%</span>
+            </div>
+        </div>
+
+        <div class="setting-section-title">MATCH RULES</div>
+        <div class="setting-row">
+            <label for="timer-length">ROUND TIMER DURATION</label>
+            <div class="setting-control">
+                <input type="range" id="timer-length" class="setting-slider" min="5" max="60" value="20" oninput="updateTimerSettingDisplay()">
+                <span id="timer-len-val" class="setting-value">20s</span>
+            </div>
+        </div>
+
+        <div class="setting-section-title">CHOOSE CATEGORY</div>
+        <div class="category-grid">
+            <button id="cat-popCulture" class="category-btn" onclick="selectCategory('popCulture')">🎭 Pop-Culture</button>
+            <button id="cat-advertising" class="category-btn" onclick="selectCategory('advertising')">📢 Advertising</button>
+            <button id="cat-brands" class="category-btn" onclick="selectCategory('brands')">🏷️ Brands</button>
+            <button id="cat-music" class="category-btn" onclick="selectCategory('music')">🎵 Music</button>
+            <button id="cat-animals" class="category-btn" onclick="selectCategory('animals')">🦁 Animals</button>
+            <button id="cat-geography" class="category-btn" onclick="selectCategory('geography')">🌍 Geography</button>
+            <button id="cat-videoGames" class="category-btn" onclick="selectCategory('videoGames')">🎮 Video Games</button>
+            <button id="cat-sports" class="category-btn" onclick="selectCategory('sports')">⚽ Sports</button>
+            <button id="cat-technology" class="category-btn" onclick="selectCategory('technology')">💻 Technology</button>
+            <button id="cat-foodDrink" class="category-btn" onclick="selectCategory('foodDrink')">🍕 Food & Drink</button>
+            <button id="cat-random" class="category-btn random-btn" onclick="selectCategory('random')">🃏 RANDOM (1000+ Options)</button>
+        </div>
+
+        <button class="btn close-settings-btn" onclick="toggleSettingsPanel(false)">SAVE & CLOSE</button>
+    </div>
+
+    <img class="game-logo" src="Assets/StumpedLogo.png" alt="Stumped Logo">
+
+    <div id="name-setup">
+        <input type="text" id="p1-name-input" class="name-input" placeholder="Player 1 Name" oninput="updateNames()">
+        <input type="text" id="p2-name-input" class="name-input" placeholder="Player 2 Name" oninput="updateNames()">
+    </div>
+
+    <div id="scoreboard">
+        <div class="p1-color"><span id="p1-label">Player 1</span>: <span id="p1-score">0</span></div>
+        <div class="p2-color"><span id="p2-label">Player 2</span>: <span id="p2-score">0</span></div>
+    </div>
+
+    <div id="pool-status-bar">
+        <div id="active-pool-indicator">POOL: 🃏 RANDOM</div>
+    </div>
+
+    <div id="card">
+        <img id="card-image" src="" alt="Prompt Clue">
+        <div id="card-text">TYPE YOUR NAMES & HIT START!<br><span style="font-size: 14px; color:#a488e5; font-weight: normal; display:inline-block; margin-top:8px;">You can change Categories anytime in the Settings ⚙️</span></div>
+    </div>
+
+    <div id="timer-container">
+        <div id="timer-bar"></div>
+    </div>
+    <div id="timer-text">20.0s</div>
+
+    <div id="turn-indicator"></div>
+
+    <button id="start-btn" class="btn" onclick="startRound()">START</button>
+
+    <div class="game-controls">
+        <button id="p1-btn" class="btn player-btn" onclick="passTurn(1)" disabled>
+            <span class="btn-name">Player 1</span> <span>Press 'D'</span>
+        </button>
+        <button id="p2-btn" class="btn player-btn" onclick="passTurn(2)" disabled>
+            <span class="btn-name">Player 2</span> <span>Press 'K'</span>
+        </button>
+    </div>
+
+    <img class="company-logo" src="Assets/JammyLogo.png" alt="Jammy Creatives Logo">
+</div>
+
+<script>
+    const categories = {
+        popCulture: [
+            "Barbie", "Batman", "Yoda", "Hogwarts", "Kardashian", "Shrek", "Beyoncé", "Godzilla", "Marvel", "TARDIS",
+            "Pikachu", "Dracula", "Gandalf", "Matrix", "Simpsons", "Joker", "Disney", "Seinfeld", "Gollum", "Skywalker",
+            "Spiderman", "Tarzan", "Sherlock", "Potter", "Minion", "Bond", "Swifties", "Elmo", "Muppets", "Wakanda",
+            "Oscar", "Emmy", "Grammy", "Hollywood", "Anime", "Cosplay", "Trekkie", "Jedi", "Sith", "Voldemort",
+            "Scooby", "Shaggy", "Homer", "Snoopy", "Popeye", "Buzz", "Woody", "Elsa", "Mulan", "Simba", "Shuri",
+            "Katniss", "Khaleesi", "Geralt", "Wednesday", "Thanos", "Groot", "Rocky", "Rambo", "Terminator", "Neo",
+            "Morpheus", "Trinity", "Legolas", "Frodo", "Sauron", "Borat", "Deadpool", "Wolverine", "Lassie", "Pokemon",
+            "Avengers", "Omniverse", "Multiverse", "Fanfiction", "Fandom", "Spoiler", "Reboot", "Sequel", "Prequel",
+            "Sitcom", "Paparazzi", "Celebrity", "Influencer", "Meme", "Viral", "Algorithm", "Streaming", "Binge",
+            "Subtitles", "Cameo", "Autograph", "Billboard", "Red-carpet", "Blockbuster", "Glitz", "Glamour", "Gossip", "Icon"
+        ],
+        advertising: [
+            "Slogan", "Billboard", "Commercial", "Mascot", "Jingles", "Logo", "Campaign", "Poster", "Brochure", "Flyer",
+            "Banner", "Pitch", "Target", "Demographic", "Headline", "Copywriting", "Branding", "Buzzword", "Gimmick",
+            "Hype", "Infomercial", "Endorsement", "Sponsor", "Placement", "Pamphlet", "Merchandising", "Publicity",
+            "Promotion", "Coupon", "Discount", "Giveaway", "Freebie", "Sample", "Classified", "Spam", "Pop-up", "Clickbait",
+            "Click-through", "Impressions", "Reach", "Engagement", "Conversion", "Strategy", "Concept", "Tagline",
+            "Trademark", "Copyright", "Patent", "Launch", "Teaser", "Trailer", "Premiere", "Showcase", "Exhibition",
+            "Expo", "Newsletter", "Mailer", "Catalog", "Telemarketing", "Cold-call", "Pitchman", "Spokesperson",
+            "Ambassador", "Testimonial", "Review", "Rating", "Stars", "Survey", "Feedback", "Questionnaire", "Focus-group",
+            "Market-research", "Trend", "Fad", "Craze", "Novelty", "Premium", "Luxury", "Budget", "Economy", "Wholesale",
+            "Retail", "Consumer", "Buyer", "Customer", "Client", "Vendor", "Supplier", "Merchant", "Storefront",
+            "Window-shopping", "Supermarket", "Boutique", "Outlets", "Clearance", "Liquidation", "Auction", "Sensation"
+        ],
+        brands: [
+            "Nike", "Apple", "Google", "Lego", "Coca-Cola", "Pepsi", "McDonald’s", "Starbucks", "Amazon", "Microsoft",
+            "Nintendo", "Sony", "Samsung", "Toyota", "Ford", "Tesla", "Disney", "Netflix", "Adidas", "Puma", "Reebok",
+            "Rolex", "Gucci", "Chanel", "Prada", "Louis-Vuitton", "Supreme", "Ikea", "Target", "Walmart", "eBay",
+            "Ferrari", "Porsche", "BMW", "Mercedes", "Audi", "Honda", "Harley-Davidson", "Hasbro", "Mattel", "Barbie",
+            "Hot-Wheels", "Crayola", "Sharpie", "Post-it", "Xerox", "Polaroid", "Kodak", "Canon", "Nikon", "Gillette",
+            "Dove", "Colgate", "Crest", "Heinz", "Kellogg’s", "Oreos", "Doritos", "Pringles", "Red-Bull", "Monster",
+            "Gatorade", "Visa", "Mastercard", "Paypal", "Uber", "Airbnb", "Spotify", "YouTube", "TikTok", "Instagram",
+            "Snapchat", "Pinterest", "LinkedIn", "Facebook", "Twitter", "Reddit", "Skype", "Zoom", "Adobe", "Photoshop",
+            "Windows", "Android", "PlayStation", "Xbox", "Sega", "Atari", "GameBoy", "Cadillac", "Jeep", "Subway",
+            "Wendy’s", "Burger-King", "Domino’s", "Pizza-Hut", "KFC", "Levi’s", "Converse", "Vans"
+        ],
+        music: [
+            "Melody", "Rhythm", "Harmony", "Beat", "Tempo", "Lyrics", "Chorus", "Verse", "Bridge", "Outro", "Intro",
+            "Solo", "Duet", "Trio", "Quartet", "Band", "Choir", "Orchestra", "Symphony", "Concert", "Gig", "Festival",
+            "Album", "Track", "Single", "Playlist", "Remix", "Cover", "Vinyl", "Cassette", "CD", "MP3", "Streaming",
+            "Radio", "Podcast", "Microphone", "Amplifier", "Speaker", "Headphones", "Earbuds", "Guitar", "Piano",
+            "Drums", "Bass", "Violin", "Flute", "Saxophone", "Trumpet", "Keyboard", "Synthesizer", "Accordion",
+            "Harmonica", "Ukulele", "Banjo", "Harp", "Cello", "Trombone", "Clarinet", "Opera", "Musical", "Broadway",
+            "Jazz", "Blues", "Rock", "Pop", "Rap", "Hip-hop", "Country", "Classical", "Reggae", "Metal", "Punk",
+            "Disco", "Techno", "EDM", "Funk", "Soul", "Gospel", "Folk", "R&B", "Ska", "Grunge", "Indie", "Acoustic",
+            "Electric", "Instrument", "Vocalist", "Rapper", "Drummer", "Guitarist", "Pianist", "Composer", "Conductor",
+            "Producer", "Encore", "Backstage", "Tour", "Stage", "Karaoke"
+        ],
+        animals: [
+            "Lion", "Tiger", "Bear", "Elephant", "Giraffe", "Zebra", "Kangaroo", "Koala", "Panda", "Leopard", "Cheetah",
+            "Jaguar", "Wolf", "Fox", "Coyote", "Monkey", "Chimpanzee", "Gorilla", "Orangutan", "Sloth", "Hippo", "Rhino",
+            "Crocrocodile", "Alligator", "Lizard", "Chameleon", "Snake", "Turtle", "Tortoise", "Frog", "Toad", "Salamander",
+            "Dolphin", "Whale", "Shark", "Octopus", "Squid", "Jellyfish", "Starfish", "Crab", "Lobster", "Shrimp", "Seal",
+            "Walrus", "Otter", "Penguin", "Eagle", "Hawk", "Falcon", "Owl", "Parrot", "Flamingo", "Peacock", "Swan", "Duck",
+            "Goose", "Chicken", "Turkey", "Pigeon", "Dove", "Crow", "Raven", "Sparrow", "Robin", "Hummingbird", "Butterfly",
+            "Moth", "Bee", "Wasp", "Ant", "Beetle", "Dragonfly", "Grasshopper", "Cricket", "Spider", "Scorpion", "Centipede",
+            "Deer", "Moose", "Elk", "Caribou", "Camel", "Llama", "Alpaca", "Horse", "Donkey", "Cow", "Bull", "Sheep", "Goat",
+            "Pig", "Dog", "Cat", "Rabbit", "Hamster", "Guinea-pig", "Mouse", "Rat", "Squirrel"
+        ],
+        geography: [
+            "Mountain", "Valley", "River", "Lake", "Ocean", "Sea", "Gulf", "Bay", "Island", "Peninsula", "Continent",
+            "Country", "State", "City", "Capital", "Town", "Village", "Desert", "Oasis", "Jungle", "Rainforest", "Forest",
+            "Woods", "Swamp", "Marsh", "Tundra", "Prairie", "Savannah", "Canyon", "Gorge", "Cliff", "Volcano", "Crater",
+            "Glacier", "Iceberg", "Waterfall", "Geyser", "Cave", "Cavern", "Beach", "Coast", "Shore", "Reef", "Atoll",
+            "Archipelago", "Strait", "Canal", "Delta", "Estuary", "Plateau", "Plain", "Hill", "Ridge", "Peak", "Summit",
+            "Equator", "Latitude", "Longitude", "Meridian", "Hemisphere", "Horizon", "Compass", "Atlas", "Globe", "Map",
+            "Border", "Boundary", "Frontier", "Region", "Zone", "Territory", "Province", "County", "District", "Suburb",
+            "Metropolis", "Megalopolis", "Landmark", "Monument", "Altitude", "Elevation", "Topography", "Terrain",
+            "Landscape", "Scenery", "Vista", "Viewpoint", "Panorama", "GPS", "Coordinates", "Navigation", "Exploration",
+            "Expedition", "Voyage", "Journey", "Travel", "Tourism", "Migration", "Settlement", "Population"
+        ],
+        videoGames: [
+            "Mario", "Zelda", "Link", "Bowser", "Yoshi", "Sonic", "Tails", "Knuckles", "Eggman", "Pikachu", "Charizard",
+            "Mewtwo", "Eevee", "Minecraft", "Steve", "Creeper", "Enderman", "Fortnite", "Jonesy", "Peely", "Pac-Man",
+            "Ghost", "Tetris", "Block", "Pong", "Atari", "Nintendo", "PlayStation", "Xbox", "Sega", "GameBoy", "Console",
+            "Controller", "Joystick", "Button", "Trigger", "D-pad", "Headset", "Keyboard", "Mouse", "Screen", "Monitor",
+            "Graphics", "Pixels", "Polygon", "Texture", "Engine", "Code", "Bug", "Glitch", "Patch", "Update", "DLC",
+            "Mod", "Level", "Stage", "World", "Map", "Mission", "Quest", "Campaign", "Story", "Cutscene", "Dialogue",
+            "Choice", "Ending", "Player", "Gamer", "Avatar", "Character", "Hero", "Villain", "Boss", "Minion", "NPC",
+            "Enemy", "Rival", "Team", "Clan", "Guild", "Party", "Lobby", "Server", "Ping", "Lag", "Framerate", "Resolution",
+            "Audio", "Soundtracks", "Streamer", "Speedrun", "Achievement", "Trophy", "Leaderboard", "Rank", "Score",
+            "High-score", "Combo", "Respawn", "Checkpoint"
+        ],
+        sports: [
+            "Football", "Soccer", "Basketball", "Baseball", "Softball", "Tennis", "Badminton", "Squash", "Racquetball",
+            "Volleyball", "Hockey", "Lacrosse", "Rugby", "Cricket", "Golf", "Bowling", "Billiards", "Pool", "Snooker",
+            "Darts", "Curling", "Skiing", "Snowboarding", "Sledding", "Bobsled", "Ice-skating", "Figure-skating",
+            "Roller-skating", "Skateboarding", "Surfing", "Windsurfing", "Kitesurfing", "Wakeboarding", "Water-skiing",
+            "Swimming", "Diving", "Rowing", "Kayaking", "Canoeing", "Sailing", "Fishing", "Hunting", "Archery", "Shooting",
+            "Fencing", "Boxing", "Wrestling", "Karate", "Taekwondo", "Judo", "Kung-fu", "MMA", "Kickboxing", "Muay-Thai",
+            "Jiu-jitsu", "Gymnastics", "Acrobatics", "Trampoline", "Cheerleading", "Dance", "Ballet", "Running", "Sprinting",
+            "Jogging", "Walking", "Hiking", "Mountaineering", "Climbing", "Cycling", "Mountain-biking", "BMX", "Motocross",
+            "Auto-racing", "Karting", "Horseback-riding", "Rodeo", "Polo", "Frisbee", "Disc-golf", "Dodgeball", "Kickball",
+            "Handball", "Netball", "Rounders", "Hurling", "Gaelic-football", "Aussie-rules", "Weightlifting", "Powerlifting",
+            "Bodybuilding", "Crossfit", "Yoga", "Pilates", "Aerobics", "Marathon", "Triathlon", "Decathlon", "Pentathlon",
+            "Heptathlon", "Olympics"
+        ],
+        technology: [
+            "Computer", "Laptop", "Tablet", "Smartphone", "Smartwatch", "Television", "Monitor", "Screen", "Display",
+            "Resolution", "Pixels", "Processor", "CPU", "GPU", "RAM", "Hard-drive", "SSD", "Flash-drive", "Memory-card",
+            "Motherboard", "Keyboard", "Mouse", "Trackpad", "Touchscreen", "Stylus", "Printer", "Scanner", "Copier",
+            "Projector", "Speaker", "Microphone", "Headphones", "Earbuds", "Webcam", "Camera", "Lens", "Sensor", "Battery",
+            "Charger", "Cable", "Adapter", "Wi-Fi", "Bluetooth", "Cellular", "Internet", "Network", "Router", "Modem",
+            "Server", "Cloud", "Storage", "Backup", "Data", "Database", "Software", "Application", "App", "Program",
+            "Operating-system", "Windows", "macOS", "Linux", "Android", "iOS", "Browser", "Website", "Webpage", "Link",
+            "URL", "Domain", "Hosting", "Coding", "Programming", "Script", "Algorithm", "AI", "Robot", "Automation",
+            "Cybersecurity", "Encryption", "Password", "Biometrics", "Firewall", "Antivirus", "Malware", "Virus", "Hacker",
+            "Phishing", "Spam", "Update", "Upgrade", "Patch", "Bug", "Glitch", "Crash", "Reboot", "Interface", "Dashboard",
+            "Widget", "Gadget"
+        ],
+        foodDrink: [
+            "Pizza", "Burger", "Taco", "Burrito", "Sushi", "Sashimi", "Ramen", "Noodles", "Pasta", "Spaghetti", "Lasagna",
+            "Macaroni", "Cheese", "Butter", "Milk", "Cream", "Yogurt", "Ice-cream", "Gelato", "Sorbet", "Cake", "Cupcake",
+            "Muffin", "Donut", "Pastry", "Croissant", "Bread", "Toast", "Bagel", "Sandwich", "Wrap", "Salad", "Soup",
+            "Stew", "Chili", "Rice", "Quinoa", "Oats", "Cereal", "Pancake", "Waffle", "Bacon", "Sausage", "Egg", "Omelet",
+            "Steak", "Chicken", "Turkey", "Pork", "Ham", "Beef", "Lamb", "Salmon", "Tuna", "Shrimp", "Crab", "Lobster",
+            "Potato", "Fries", "Chips", "Nachos", "Popcorn", "Pretzel", "Cracker", "Cookie", "Brownie", "Pie", "Tart",
+            "Chocolate", "Candy", "Caramel", "Honey", "Syrup", "Jam", "Jelly", "Peanut-butter", "Coffee", "Espresso",
+            "Latte", "Cappuccino", "Tea", "Matcha", "Chai", "Juice", "Smoothie", "Milkshake", "Soda", "Cola", "Lemonade",
+            "Water", "Beer", "Wine", "Champagne", "Cider", "Cocktail", "Mocktail", "Whiskey", "Vodka", "Rum", "Tequila"
+        ]
+    };
+
+    let activePool = [];
+    let p1Score = 0;
+    let p2Score = 0;
+    let activePlayer = 0; 
+    let maxRoundTime = 20; 
+    let timeLeft = 20;
+    let timerId = null;
+    let gameActive = false;
+
+    let p1Name = "Player 1";
+    let p2Name = "Player 2";
+
+    // AUDIO CHANNELS (Default Load Balanced to 10%)
+    let isMuted = false;
+    const countdownAudio = new Audio('Assets/countdown.mp3');
+    const passAudio = new Audio('Assets/pass.mp3');
+    const lobbyAudio = new Audio('Assets/lobby.mp3');
+    lobbyAudio.loop = true;
+    const gameplayAudio = new Audio('Assets/gameplay.mp3');
+    gameplayAudio.loop = true;
+
+    selectCategory('random');
+    applyAudioSettings();
+
+    window.addEventListener('click', function initLobbyMusic() {
+        if (!gameActive && lobbyAudio.paused && !isMuted) {
+            lobbyAudio.play().catch(e => {});
+        }
+        window.removeEventListener('click', initLobbyMusic);
+    });
+
+    function toggleSettingsPanel(show) {
+        if (gameActive && show) return; 
+        document.getElementById('settings-panel').style.display = show ? 'flex' : 'none';
+    }
+
+    function toggleInfoPanel(show) {
+        document.getElementById('info-panel').style.display = show ? 'flex' : 'none';
+    }
+
+    function selectCategory(key) {
+        const buttons = document.querySelectorAll('.category-btn');
+        buttons.forEach(btn => btn.classList.remove('active-selection'));
+
+        const targetBtn = document.getElementById('cat-' + key);
+        if (targetBtn) targetBtn.classList.add('active-selection');
+
+        if (key === 'random') {
+            activePool = [];
+            for (let type in categories) {
+                activePool = activePool.concat(categories[type]);
+            }
+            document.getElementById('active-pool-indicator').innerText = "POOL: 🃏 RANDOM";
+        } else {
+            activePool = categories[key];
+            let displayTitle = key.replace(/([A-Z])/g, ' $1');
+            document.getElementById('active-pool-indicator').innerText = "POOL: " + displayTitle.toUpperCase();
+        }
+    }
+
+    function applyAudioSettings() {
+        const musicVol = document.getElementById('music-volume').value;
+        const sfxVol = document.getElementById('sfx-volume').value;
+
+        document.getElementById('music-vol-val').innerText = musicVol + "%";
+        document.getElementById('sfx-vol-val').innerText = sfxVol + "%";
+
+        lobbyAudio.volume = musicVol / 100;
+        gameplayAudio.volume = musicVol / 100;
+        countdownAudio.volume = sfxVol / 100;
+        passAudio.volume = sfxVol / 100;
+    }
+
+    function updateTimerSettingDisplay() {
+        const selectedTime = document.getElementById('timer-length').value;
+        document.getElementById('timer-len-val').innerText = selectedTime + "s";
+        maxRoundTime = parseInt(selectedTime);
+        
+        if (!gameActive) {
+            document.getElementById('timer-text').innerText = maxRoundTime.toFixed(1) + "s";
+        }
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        const btn = document.getElementById('mute-toggle');
+        
+        countdownAudio.muted = isMuted;
+        passAudio.muted = isMuted;
+        lobbyAudio.muted = isMuted;
+        gameplayAudio.muted = isMuted;
+
+        if (isMuted) {
+            btn.innerText = "🔇 SOUNDS: MUTED";
+            btn.classList.add('muted');
+        } else {
+            btn.innerText = "🔊 SOUNDS: ON";
+            btn.classList.remove('muted');
+            if (!gameActive) lobbyAudio.play().catch(e => {});
+        }
+    }
+
+    function updateNames() {
+        const p1Input = document.getElementById('p1-name-input').value.trim();
+        const p2Input = document.getElementById('p2-name-input').value.trim();
+        
+        p1Name = p1Input !== "" ? p1Input : "Player 1";
+        p2Name = p2Input !== "" ? p2Input : "Player 2";
+
+        document.getElementById('p1-label').innerText = p1Name;
+        document.getElementById('p2-label').innerText = p2Name;
+        
+        document.querySelectorAll('.btn-name')[0].innerText = p1Name;
+        document.querySelectorAll('.btn-name')[1].innerText = p2Name;
+
+        if (gameActive) updateTurnUI();
+    }
+
+    window.addEventListener('keydown', function(e) {
+        if (!gameActive) return;
+        if (e.key === 'd' || e.key === 'D') passTurn(1);
+        if (e.key === 'k' || e.key === 'K') passTurn(2);
+    });
+
+    function triggerSubtleImpact(playerNum) {
+        const targetBtn = playerNum === 1 ? document.getElementById('p1-btn') : document.getElementById('p2-btn');
+        const flashClass = playerNum === 1 ? 'btn-flash-white' : 'btn-flash-purple';
+        
+        targetBtn.classList.add(flashClass);
+        setTimeout(() => {
+            targetBtn.classList.remove(flashClass);
+        }, 120);
+
+        passAudio.currentTime = 0;
+        passAudio.play().catch(e => {});
+    }
+
+    function startRound() {
+        if (gameActive) return;
+
+        document.getElementById('start-btn').disabled = true;
+        document.getElementById('card-image').style.display = "none";
+        
+        lobbyAudio.pause();
+        lobbyAudio.currentTime = 0;
+
+        countdownAudio.currentTime = 0;
+        countdownAudio.play().catch(e => {});
+
+        let count = 3;
+        document.getElementById('card-text').innerText = count;
+        
+        let countInterval = setInterval(() => {
+            count--;
+            if (count > 0) {
+                document.getElementById('card-text').innerText = count;
+            } else if (count === 0) {
+                document.getElementById('card-text').innerText = "GO!";
+            } else {
+                clearInterval(countInterval);
+                runGameTimer();
+            }
+        }, 1000);
+    }
+
+    function runGameTimer() {
+        gameplayAudio.currentTime = 0;
+        gameplayAudio.play().catch(e => {});
+
+        const randomWord = activePool[Math.floor(Math.random() * activePool.length)];
+        document.getElementById('card-text').innerText = randomWord;
+
+        timeLeft = maxRoundTime; 
+        document.getElementById('timer-text').innerText = timeLeft.toFixed(1) + "s";
+        document.getElementById('timer-bar').style.width = "100%";
+        gameActive = true;
+        activePlayer = 1;
+        updateTurnUI();
+
+        timerId = setInterval(function() {
+            timeLeft -= 0.1;
+            if (timeLeft <= 0) {
+                timeLeft = 0;
+                endRound();
+            }
+            document.getElementById('timer-text').innerText = timeLeft.toFixed(1) + "s";
+            document.getElementById('timer-bar').style.width = (timeLeft / maxRoundTime * 100) + "%";
+        }, 100);
+    }
+
+    function passTurn(playerNum) {
+        if (!gameActive || activePlayer !== playerNum) return;
+        
+        triggerSubtleImpact(playerNum);
+
+        activePlayer = (activePlayer === 1) ? 2 : 1;
+        updateTurnUI();
+    }
+
+    function updateTurnUI() {
+        const p1Btn = document.getElementById('p1-btn');
+        const p2Btn = document.getElementById('p2-btn');
+        const indicator = document.getElementById('turn-indicator');
+        if (activePlayer === 1) {
+            p1Btn.disabled = false;
+            p2Btn.disabled = true;
+            indicator.innerHTML = `◀ ${p1Name}'s Turn!`;
+        } else {
+            p1Btn.disabled = true;
+            p2Btn.disabled = false;
+            indicator.innerHTML = `${p2Name}'s Turn! ▶`;
+        }
+    }
+
+    function endRound() {
+        gameActive = false;
+        clearInterval(timerId);
+        
+        gameplayAudio.pause();
+        gameplayAudio.currentTime = 0;
+        if (!isMuted) lobbyAudio.play().catch(e => {});
+
+        document.getElementById('p1-btn').disabled = true;
+        document.getElementById('p2-btn').disabled = true;
+        document.getElementById('start-btn').disabled = false;
+        document.getElementById('card-image').style.display = "none";
+
+        if (activePlayer === 1) {
+            p2Score++;
+            document.getElementById('p2-score').innerText = p2Score;
+            document.getElementById('card-text').innerText = `Unlucky, ${p1Name}. ${p2Name} wins this time.`;
+        } else {
+            p1Score++;
+            document.getElementById('p1-score').innerText = p1Score;
+            document.getElementById('card-text').innerText = `Sucks to suck ${p2Name}. ${p1Name} won the round.`;
+        }
+        document.getElementById('turn-indicator').innerText = "";
+    }
+</script>
+</body>
+</html>
