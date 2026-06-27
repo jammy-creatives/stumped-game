@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             background: url('Assets/GameBackground.png') no-repeat center center fixed;
             background-size: cover;
             color: #ffffff;
@@ -22,12 +22,12 @@
         
         #game-box {
             width: 100%;
-            max-width: 450px; /* Centered tight layout for mobile and desktop viewports */
-            background-color: #9876e0; /* Deep Purple Main Box */
+            max-width: 440px; /* Centered tight layout layout profile for mobile safety */
+            background-color: #9876e0; 
             border: 5px solid #ffffff;
             border-radius: 24px;
-            padding: 15px; /* Compact height optimization */
-            box-sizing: border-box;
+            padding: 15px; 
+            box-sizing: border-box; /* Forces everything to stay inside the boundary walls */
             text-align: center;
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
             position: relative;
@@ -36,8 +36,8 @@
         /* Interactive Action Icons (Cog & Info) */
         #settings-cog {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             width: 28px;
             height: 28px;
             cursor: pointer;
@@ -50,8 +50,8 @@
 
         #info-icon {
             position: absolute;
-            top: 58px; /* Stacked cleanly directly below the settings cog */
-            right: 20px;
+            top: 52px; 
+            right: 15px;
             width: 28px;
             height: 28px;
             cursor: pointer;
@@ -70,11 +70,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); /* Premium dark dim block */
+            background-color: rgba(0, 0, 0, 0.85); 
             border-radius: 20px;
             z-index: 120;
             box-sizing: border-box;
-            padding: 20px;
+            padding: 15px;
             justify-content: center;
             align-items: center;
         }
@@ -85,6 +85,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            box-sizing: border-box;
         }
         #info-guide-img {
             max-width: 100%;
@@ -105,10 +106,6 @@
             text-shadow: 0 2px 8px rgba(0,0,0,0.8);
             z-index: 130;
             line-height: 1;
-            transition: color 0.2s;
-        }
-        .close-x-btn:hover {
-            color: #e3dcf9;
         }
 
         /* Settings Overlay Panel */
@@ -123,38 +120,37 @@
             border-radius: 20px;
             z-index: 90;
             box-sizing: border-box;
-            padding: 25px 24px;
+            padding: 20px;
             flex-direction: column;
             overflow-y: auto;
         }
         #settings-panel h2 {
             margin-top: 0;
             margin-bottom: 15px;
-            font-size: 24px;
+            font-size: 22px;
             letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         .setting-section-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 900;
-            letter-spacing: 1px;
             color: #ffffff;
             background: #a488e5;
             padding: 4px 8px;
             border-radius: 6px;
             text-align: left;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border-left: 3px solid #ffffff;
         }
         .setting-row {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: left;
+            box-sizing: border-box;
         }
         .setting-row label {
             display: block;
             font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 6px;
+            font-size: 12px;
+            margin-bottom: 4px;
             color: #e3dcf9;
         }
         .setting-control {
@@ -173,27 +169,22 @@
             text-align: right;
         }
 
-        /* Integrated Category Selection Grid */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 6px;
+            margin-bottom: 12px;
         }
         .category-btn {
             background-color: #ffffff;
             color: #9876e0;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
-            padding: 10px 4px;
-            border-radius: 10px;
+            padding: 8px 2px;
+            border-radius: 8px;
             box-shadow: 0 3px 0 #a488e5;
             border: none;
             cursor: pointer;
-        }
-        .category-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #a488e5;
         }
         .category-btn.active-selection {
             background-color: #e3dcf9;
@@ -203,38 +194,38 @@
         .category-btn.random-btn {
             grid-column: span 2;
             background-color: #e3dcf9;
-            font-size: 13px;
+            font-size: 12px;
         }
-
         .close-settings-btn {
             margin-top: auto;
             background: #ffffff;
             color: #9876e0;
-            padding: 12px;
+            padding: 10px;
         }
 
-        /* Branding Configuration */
+        /* Branding Sizing Fixes */
         .game-logo {
-            max-width: 320px; 
+            max-width: 260px; 
+            width: 75%;
             height: auto;
-            margin: -10px auto -15px auto;
+            margin: -5px auto -10px auto;
             display: block;
-            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.2));
         }
         .company-logo {
-            max-width: 260px; 
+            max-width: 220px; 
+            width: 60%;
             height: auto;
             margin: 15px auto 0 auto;
             display: block;
             border-radius: 4px;
         }
 
-        /* Responsive Input Setup Container */
+        /* Fluid Mobile-Locked Name Input Framework */
         #name-setup {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 12px;
             width: 100%;
             box-sizing: border-box;
         }
@@ -244,12 +235,12 @@
             border-radius: 8px;
             padding: 10px 5px;
             color: #ffffff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             text-align: center;
             outline: none;
             width: 100%;
-            box-sizing: border-box;
+            box-sizing: border-box; /* Forces margins inside calculation wall arrays */
         }
         .name-input::placeholder {
             color: #e3dcf9;
@@ -266,71 +257,62 @@
             justify-content: space-around;
             align-items: center;
             background-color: #a488e5;
-            padding: 14px;
+            padding: 12px;
             border-radius: 14px;
             font-weight: 800;
-            font-size: 16px;
-            margin-bottom: 15px;
+            font-size: 15px;
+            margin-bottom: 12px;
             border: 2px solid #ffffff;
             width: 100%;
             box-sizing: border-box;
         }
-        .p1-color { color: #ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-        .p2-color { color: #e3dcf9; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .p1-color { color: #ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45%; }
+        .p2-color { color: #e3dcf9; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45%; }
 
-        /* Centered Status Bar */
         #pool-status-bar {
             display: flex;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         #active-pool-indicator {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             color: #ffffff;
             background: rgba(0, 0, 0, 0.25);
-            padding: 6px 16px;
+            padding: 5px 14px;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         #card {
             background-color: #ffffff;
             color: #9876e0;
-            min-height: 110px; /* Streamlined frame footprint */
+            min-height: 100px; 
             border-radius: 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             box-shadow: 0 6px 0 #a488e5;
             box-sizing: border-box;
             border: 1px solid #e3dcf9;
             line-height: 1.4;
-        }
-        
-        #card-image {
-            max-width: 120px;
-            max-height: 90px;
-            margin-bottom: 12px;
-            border-radius: 10px;
-            border: 2px solid #9876e0;
-            display: none;
+            width: 100%;
         }
 
         #timer-container {
             width: 100%;
             background-color: #a488e5;
-            height: 16px;
+            height: 14px;
             border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border: 2px solid #ffffff;
+            box-sizing: border-box;
         }
         #timer-bar {
             width: 100%;
@@ -339,27 +321,25 @@
             transition: width 0.1s linear;
         }
         #timer-text {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 900;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #ffffff;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
         
         #turn-indicator {
-            font-size: 19px;
+            font-size: 17px;
             font-weight: bold;
-            margin-bottom: 20px;
-            height: 26px;
+            margin-bottom: 15px;
+            height: 24px;
             color: #ffffff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
         
         .btn {
             background-color: #ffffff;
             color: #9876e0;
             border: none;
-            padding: 14px 24px;
+            padding: 12px 20px;
             font-size: 16px;
             font-weight: 800;
             border-radius: 14px;
@@ -367,42 +347,41 @@
             width: 100%;
             box-sizing: border-box;
             box-shadow: 0 5px 0 #a488e5;
-            transition: all 0.1s ease;
         }
         .btn:active { 
             transform: translateY(3px); 
             box-shadow: 0 2px 0 #a488e5;
         }
-        
         #start-btn {
             background-color: #ffffff;
             color: #9876e0;
-            font-size: 20px;
-            letter-spacing: 1px;
+            font-size: 18px;
             border: 2px solid #ffffff;
         }
         
         .game-controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 15px;
+            width: 100%;
+            box-sizing: border-box;
         }
         .player-btn {
-            height: 75px; /* Streamlined frame footprint */
-            font-size: 17px;
+            height: 70px; 
+            font-size: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-            transition: background-color 0.1s ease, transform 0.1s ease, box-shadow 0.1s ease;
+            width: 100%;
+            box-sizing: border-box;
         }
         .player-btn span {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.9;
-            margin-top: 6px;
-            font-weight: normal;
+            margin-top: 4px;
         }
         
         #p1-btn { background-color: #ffffff; color: #9876e0; box-shadow: 0 5px 0 #a488e5;}
@@ -411,31 +390,18 @@
         .btn-flash-white {
             background-color: #ffffff !important;
             box-shadow: 0 0 25px #ffffff, 0 5px 0 #a488e5 !important;
-            transform: scale(1.04);
         }
         .btn-flash-purple {
             background-color: #a488e5 !important;
             color: #ffffff !important;
             box-shadow: 0 0 25px #a488e5, 0 5px 0 #ffffff !important;
-            transform: scale(1.04);
         }
-
         .player-btn:disabled, #start-btn:disabled {
             background-color: #a488e5 !important;
             color: #e3dcf9 !important;
             cursor: not-allowed;
             opacity: 0.4;
             box-shadow: none !important;
-            transform: none !important;
-            border: none !important;
-        }
-
-        /* Extra Mobile Optimization Rules */
-        @media (max-width: 480px) {
-            .game-logo { max-width: 85%; margin-bottom: -10px; }
-            #card { font-size: 18px; min-height: 100px; }
-            #timer-text { font-size: 24px; }
-            .player-btn { height: 65px; font-size: 15px; }
         }
     </style>
 </head>
@@ -502,8 +468,8 @@
     <img class="game-logo" src="" alt="Stumped Logo">
 
     <div id="name-setup">
-        <input type="text" id="p1-name-input" class="name-input" placeholder="Player 1 Name" oninput="updateNames()">
-        <input type="text" id="p2-name-input" class="name-input" placeholder="Player 2 Name" oninput="updateNames()">
+        <input type="text" id="p1-name-input" class="name-input" placeholder="Player 1" oninput="updateNames()">
+        <input type="text" id="p2-name-input" class="name-input" placeholder="Player 2" oninput="updateNames()">
     </div>
 
     <div id="scoreboard">
@@ -516,8 +482,7 @@
     </div>
 
     <div id="card">
-        <img id="card-image" src="" alt="Prompt Clue">
-        <div id="card-text">TYPE YOUR NAMES & HIT START!<br><span style="font-size: 14px; color:#a488e5; font-weight: normal; display:inline-block; margin-top:8px;">You can change Categories anytime in the Settings ⚙️</span></div>
+        <div id="card-text">TYPE YOUR NAMES & HIT START!<br><span style="font-size: 13px; color:#a488e5; font-weight: normal; display:inline-block; margin-top:6px;">You can change Categories anytime in the Settings ⚙️</span></div>
     </div>
 
     <div id="timer-container">
@@ -545,10 +510,9 @@
     // ==========================================
     // ADD YOUR GITHUB USERNAME RIGHT HERE:
     // ==========================================
-    const GITHUB_USER = "YOUR_GITHUB_USERNAME"; 
-    const BASE_URL = `https://${GITHUB_USER}.github.io/stumped-game/`;
+    const GITHUB_USER = "VirtusFuZe"; 
+    const BASE_URL = `https://${GITHUB_USER}.github.io/stumped-game/Stumped.html`;
 
-    // Automatically hooks baseline asset rendering pipelines to the repo CDN links
     document.querySelector('body').style.backgroundImage = `url('${BASE_URL}Assets/GameBackground.png')`;
     document.getElementById('settings-cog').src = BASE_URL + 'Assets/settings.png';
     document.getElementById('info-icon').src = BASE_URL + 'Assets/info.png';
@@ -557,128 +521,16 @@
     document.querySelector('.company-logo').src = BASE_URL + 'Assets/JammyLogo.png';
 
     const categories = {
-        popCulture: [
-            "Barbie", "Batman", "Yoda", "Hogwarts", "Kardashian", "Shrek", "Beyoncé", "Godzilla", "Marvel", "TARDIS",
-            "Pikachu", "Dracula", "Gandalf", "Matrix", "Simpsons", "Joker", "Disney", "Seinfeld", "Gollum", "Skywalker",
-            "Spiderman", "Tarzan", "Sherlock", "Potter", "Minion", "Bond", "Swifties", "Elmo", "Muppets", "Wakanda",
-            "Oscar", "Emmy", "Grammy", "Hollywood", "Anime", "Cosplay", "Trekkie", "Jedi", "Sith", "Voldemort",
-            "Scooby", "Shaggy", "Homer", "Snoopy", "Popeye", "Buzz", "Woody", "Elsa", "Mulan", "Simba", "Shuri",
-            "Katniss", "Khaleesi", "Geralt", "Wednesday", "Thanos", "Groot", "Rocky", "Rambo", "Terminator", "Neo",
-            "Morpheus", "Trinity", "Legolas", "Frodo", "Sauron", "Borat", "Deadpool", "Wolverine", "Lassie", "Pokemon",
-            "Avengers", "Omniverse", "Multiverse", "Fanfiction", "Fandom", "Spoiler", "Reboot", "Sequel", "Prequel",
-            "Sitcom", "Paparazzi", "Celebrity", "Influencer", "Meme", "Viral", "Algorithm", "Streaming", "Binge",
-            "Subtitles", "Cameo", "Autograph", "Billboard", "Red-carpet", "Blockbuster", "Glitz", "Glamour", "Gossip", "Icon"
-        ],
-        advertising: [
-            "Slogan", "Billboard", "Commercial", "Mascot", "Jingles", "Logo", "Campaign", "Poster", "Brochure", "Flyer",
-            "Banner", "Pitch", "Target", "Demographic", "Headline", "Copywriting", "Branding", "Buzzword", "Gimmick",
-            "Hype", "Infomercial", "Endorsement", "Sponsor", "Placement", "Pamphlet", "Merchandising", "Publicity",
-            "Promotion", "Coupon", "Discount", "Giveaway", "Freebie", "Sample", "Classified", "Spam", "Pop-up", "Clickbait",
-            "Click-through", "Impressions", "Reach", "Engagement", "Conversion", "Strategy", "Concept", "Tagline",
-            "Trademark", "Copyright", "Patent", "Launch", "Teaser", "Trailer", "Premiere", "Showcase", "Exhibition",
-            "Expo", "Newsletter", "Mailer", "Catalog", "Telemarketing", "Cold-call", "Pitchman", "Spokesperson",
-            "Ambassador", "Testimonial", "Review", "Rating", "Stars", "Survey", "Feedback", "Questionnaire", "Focus-group",
-            "Market-research", "Trend", "Fad", "Craze", "Novelty", "Premium", "Luxury", "Budget", "Economy", "Wholesale",
-            "Retail", "Consumer", "Buyer", "Customer", "Client", "Vendor", "Supplier", "Merchant", "Storefront",
-            "Window-shopping", "Supermarket", "Boutique", "Outlets", "Clearance", "Liquidation", "Auction", "Sensation"
-        ],
-        brands: [
-            "Nike", "Apple", "Google", "Lego", "Coca-Cola", "Pepsi", "McDonald’s", "Starbucks", "Amazon", "Microsoft",
-            "Nintendo", "Sony", "Samsung", "Toyota", "Ford", "Tesla", "Disney", "Netflix", "Adidas", "Puma", "Reebok",
-            "Rolex", "Gucci", "Chanel", "Prada", "Louis-Vuitton", "Supreme", "Ikea", "Target", "Walmart", "eBay",
-            "Ferrari", "Porsche", "BMW", "Mercedes", "Audi", "Honda", "Harley-Davidson", "Hasbro", "Mattel", "Barbie",
-            "Hot-Wheels", "Crayola", "Sharpie", "Post-it", "Xerox", "Polaroid", "Kodak", "Canon", "Nikon", "Gillette",
-            "Dove", "Colgate", "Crest", "Heinz", "Kellogg’s", "Oreos", "Doritos", "Pringles", "Red-Bull", "Monster",
-            "Gatorade", "Visa", "Mastercard", "Paypal", "Uber", "Airbnb", "Spotify", "YouTube", "TikTok", "Instagram",
-            "Snapchat", "Pinterest", "LinkedIn", "Facebook", "Twitter", "Reddit", "Skype", "Zoom", "Adobe", "Photoshop",
-            "Windows", "Android", "PlayStation", "Xbox", "Sega", "Atari", "GameBoy", "Cadillac", "Jeep", "Subway",
-            "Wendy’s", "Burger-King", "Domino’s", "Pizza-Hut", "KFC", "Levi’s", "Converse", "Vans"
-        ],
-        music: [
-            "Melody", "Rhythm", "Harmony", "Beat", "Tempo", "Lyrics", "Chorus", "Verse", "Bridge", "Outro", "Intro",
-            "Solo", "Duet", "Trio", "Quartet", "Band", "Choir", "Orchestra", "Symphony", "Concert", "Gig", "Festival",
-            "Album", "Track", "Single", "Playlist", "Remix", "Cover", "Vinyl", "Cassette", "CD", "MP3", "Streaming",
-            "Radio", "Podcast", "Microphone", "Amplifier", "Speaker", "Headphones", "Earbuds", "Guitar", "Piano",
-            "Drums", "Bass", "Violin", "Flute", "Saxophone", "Trumpet", "Keyboard", "Synthesizer", "Accordion",
-            "Harmonica", "Ukulele", "Banjo", "Harp", "Cello", "Trombone", "Clarinet", "Opera", "Musical", "Broadway",
-            "Jazz", "Blues", "Rock", "Pop", "Rap", "Hip-hop", "Country", "Classical", "Reggae", "Metal", "Punk",
-            "Disco", "Techno", "EDM", "Funk", "Soul", "Gospel", "Folk", "R&B", "Ska", "Grunge", "Indie", "Acoustic",
-            "Electric", "Instrument", "Vocalist", "Rapper", "Drummer", "Guitarist", "Pianist", "Composer", "Conductor",
-            "Producer", "Encore", "Backstage", "Tour", "Stage", "Karaoke"
-        ],
-        animals: [
-            "Lion", "Tiger", "Bear", "Elephant", "Giraffe", "Zebra", "Kangaroo", "Koala", "Panda", "Leopard", "Cheetah",
-            "Jaguar", "Wolf", "Fox", "Coyote", "Monkey", "Chimpanzee", "Gorilla", "Orangutan", "Sloth", "Hippo", "Rhino",
-            "Crocrocodile", "Alligator", "Lizard", "Chameleon", "Snake", "Turtle", "Tortoise", "Frog", "Toad", "Salamander",
-            "Dolphin", "Whale", "Shark", "Octopus", "Squid", "Jellyfish", "Starfish", "Crab", "Lobster", "Shrimp", "Seal",
-            "Walrus", "Otter", "Penguin", "Eagle", "Hawk", "Falcon", "Owl", "Parrot", "Flamingo", "Peacock", "Swan", "Duck",
-            "Goose", "Chicken", "Turkey", "Pigeon", "Dove", "Crow", "Raven", "Sparrow", "Robin", "Hummingbird", "Butterfly",
-            "Moth", "Bee", "Wasp", "Ant", "Beetle", "Dragonfly", "Grasshopper", "Cricket", "Spider", "Scorpion", "Centipede",
-            "Deer", "Moose", "Elk", "Caribou", "Camel", "Llama", "Alpaca", "Horse", "Donkey", "Cow", "Bull", "Sheep", "Goat",
-            "Pig", "Dog", "Cat", "Rabbit", "Hamster", "Guinea-pig", "Mouse", "Rat", "Squirrel"
-        ],
-        geography: [
-            "Mountain", "Valley", "River", "Lake", "Ocean", "Sea", "Gulf", "Bay", "Island", "Peninsula", "Continent",
-            "Country", "State", "City", "Capital", "Town", "Village", "Desert", "Oasis", "Jungle", "Rainforest", "Forest",
-            "Woods", "Swamp", "Marsh", "Tundra", "Prairie", "Savannah", "Canyon", "Gorge", "Cliff", "Volcano", "Crater",
-            "Glacier", "Iceberg", "Waterfall", "Geyser", "Cave", "Cavern", "Beach", "Coast", "Shore", "Reef", "Atoll",
-            "Archipelago", "Strait", "Canal", "Delta", "Estuary", "Plateau", "Plain", "Hill", "Ridge", "Peak", "Summit",
-            "Equator", "Latitude", "Longitude", "Meridian", "Hemisphere", "Horizon", "Compass", "Atlas", "Globe", "Map",
-            "Border", "Boundary", "Frontier", "Region", "Zone", "Territory", "Province", "County", "District", "Suburb",
-            "Metropolis", "Megalopolis", "Landmark", "Monument", "Altitude", "Elevation", "Topography", "Terrain",
-            "Landscape", "Scenery", "Vista", "Viewpoint", "Panorama", "GPS", "Coordinates", "Navigation", "Exploration",
-            "Expedition", "Voyage", "Journey", "Travel", "Tourism", "Migration", "Settlement", "Population"
-        ],
-        videoGames: [
-            "Mario", "Zelda", "Link", "Bowser", "Yoshi", "Sonic", "Tails", "Knuckles", "Eggman", "Pikachu", "Charizard",
-            "Mewtwo", "Eevee", "Minecraft", "Steve", "Creeper", "Enderman", "Fortnite", "Jonesy", "Peely", "Pac-Man",
-            "Ghost", "Tetris", "Block", "Pong", "Atari", "Nintendo", "PlayStation", "Xbox", "Sega", "GameBoy", "Console",
-            "Controller", "Joystick", "Button", "Trigger", "D-pad", "Headset", "Keyboard", "Mouse", "Screen", "Monitor",
-            "Graphics", "Pixels", "Polygon", "Texture", "Engine", "Code", "Bug", "Glitch", "Patch", "Update", "DLC",
-            "Mod", "Level", "Stage", "World", "Map", "Mission", "Quest", "Campaign", "Story", "Cutscene", "Dialogue",
-            "Choice", "Ending", "Player", "Gamer", "Avatar", "Character", "Hero", "Villain", "Boss", "Minion", "NPC",
-            "Enemy", "Rival", "Team", "Clan", "Guild", "Party", "Lobby", "Server", "Ping", "Lag", "Framerate", "Resolution",
-            "Audio", "Soundtracks", "Streamer", "Speedrun", "Achievement", "Trophy", "Leaderboard", "Rank", "Score",
-            "High-score", "Combo", "Respawn", "Checkpoint"
-        ],
-        sports: [
-            "Football", "Soccer", "Basketball", "Baseball", "Softball", "Tennis", "Badminton", "Squash", "Racquetball",
-            "Volleyball", "Hockey", "Lacrosse", "Rugby", "Cricket", "Golf", "Bowling", "Billiards", "Pool", "Snooker",
-            "Darts", "Curling", "Skiing", "Snowboarding", "Sledding", "Bobsled", "Ice-skating", "Figure-skating",
-            "Roller-skating", "Skateboarding", "Surfing", "Windsurfing", "Kitesurfing", "Wakeboarding", "Water-skiing",
-            "Swimming", "Diving", "Rowing", "Kayaking", "Canoeing", "Sailing", "Fishing", "Hunting", "Archery", "Shooting",
-            "Fencing", "Boxing", "Wrestling", "Karate", "Taekwondo", "Judo", "Kung-fu", "MMA", "Kickboxing", "Muay-Thai",
-            "Jiu-jitsu", "Gymnastics", "Acrobatics", "Trampoline", "Cheerleading", "Dance", "Ballet", "Running", "Sprinting",
-            "Jogging", "Walking", "Hiking", "Mountaineering", "Climbing", "Cycling", "Mountain-biking", "BMX", "Motocross",
-            "Auto-racing", "Karting", "Horseback-riding", "Rodeo", "Polo", "Frisbee", "Disc-golf", "Dodgeball", "Kickball",
-            "Handball", "Netball", "Rounders", "Hurling", "Gaelic-football", "Aussie-rules", "Weightlifting", "Powerlifting",
-            "Bodybuilding", "Crossfit", "Yoga", "Pilates", "Aerobics", "Marathon", "Triathlon", "Decathlon", "Pentathlon",
-            "Heptathlon", "Olympics"
-        ],
-        technology: [
-            "Computer", "Laptop", "Tablet", "Smartphone", "Smartwatch", "Television", "Monitor", "Screen", "Display",
-            "Resolution", "Pixels", "Processor", "CPU", "GPU", "RAM", "Hard-drive", "SSD", "Flash-drive", "Memory-card",
-            "Motherboard", "Keyboard", "Mouse", "Trackpad", "Touchscreen", "Stylus", "Printer", "Scanner", "Copier",
-            "Projector", "Speaker", "Microphone", "Headphones", "Earbuds", "Webcam", "Camera", "Lens", "Sensor", "Battery",
-            "Charger", "Cable", "Adapter", "Wi-Fi", "Bluetooth", "Cellular", "Internet", "Network", "Router", "Modem",
-            "Server", "Cloud", "Storage", "Backup", "Data", "Database", "Software", "Application", "App", "Program",
-            "Operating-system", "Windows", "macOS", "Linux", "Android", "iOS", "Browser", "Website", "Webpage", "Link",
-            "URL", "Domain", "Hosting", "Coding", "Programming", "Script", "Algorithm", "AI", "Robot", "Automation",
-            "Cybersecurity", "Encryption", "Password", "Biometrics", "Firewall", "Antivirus", "Malware", "Virus", "Hacker",
-            "Phishing", "Spam", "Update", "Upgrade", "Patch", "Bug", "Glitch", "Crash", "Reboot", "Interface", "Dashboard",
-            "Widget", "Gadget"
-        ],
-        foodDrink: [
-            "Pizza", "Burger", "Taco", "Burrito", "Sushi", "Sashimi", "Ramen", "Noodles", "Pasta", "Spaghetti", "Lasagna",
-            "Macaroni", "Cheese", "Butter", "Milk", "Cream", "Yogurt", "Ice-cream", "Gelato", "Sorbet", "Cake", "Cupcake",
-            "Muffin", "Donut", "Pastry", "Croissant", "Bread", "Toast", "Bagel", "Sandwich", "Wrap", "Salad", "Soup",
-            "Stew", "Chili", "Rice", "Quinoa", "Oats", "Cereal", "Pancake", "Waffle", "Bacon", "Sausage", "Egg", "Omelet",
-            "Steak", "Chicken", "Turkey", "Pork", "Ham", "Beef", "Lamb", "Salmon", "Tuna", "Shrimp", "Crab", "Lobster",
-            "Potato", "Fries", "Chips", "Nachos", "Popcorn", "Pretzel", "Cracker", "Cookie", "Brownie", "Pie", "Tart",
-            "Chocolate", "Candy", "Caramel", "Honey", "Syrup", "Jam", "Jelly", "Peanut-butter", "Coffee", "Espresso",
-            "Latte", "Cappuccino", "Tea", "Matcha", "Chai", "Juice", "Smoothie", "Milkshake", "Soda", "Cola", "Lemonade",
-            "Water", "Beer", "Wine", "Champagne", "Cider", "Cocktail", "Mocktail", "Whiskey", "Vodka", "Rum", "Tequila"
-        ]
+        popCulture: ["Barbie", "Batman", "Yoda", "Hogwarts", "Kardashian", "Shrek", "Beyoncé", "Godzilla", "Marvel", "TARDIS", "Pikachu", "Dracula", "Gandalf", "Matrix", "Simpsons", "Joker", "Disney", "Seinfeld", "Gollum", "Skywalker", "Spiderman", "Tarzan", "Sherlock", "Potter", "Minion", "Bond", "Swifties", "Elmo", "Muppets", "Wakanda", "Oscar", "Emmy", "Grammy", "Hollywood", "Anime", "Cosplay", "Trekkie", "Jedi", "Sith", "Voldemort", "Scooby", "Shaggy", "Homer", "Snoopy", "Popeye", "Buzz", "Woody", "Elsa", "Mulan", "Simba", "Shuri", "Katniss", "Khaleesi", "Geralt", "Wednesday", "Thanos", "Groot", "Rocky", "Rambo", "Terminator", "Neo", "Morpheus", "Trinity", "Legolas", "Frodo", "Sauron", "Borat", "Deadpool", "Wolverine", "Lassie", "Pokemon", "Avengers", "Omniverse", "Multiverse", "Fanfiction", "Fandom", "Spoiler", "Reboot", "Sequel", "Prequel", "Sitcom", "Paparazzi", "Celebrity", "Influencer", "Meme", "Viral", "Algorithm", "Streaming", "Binge", "Subtitles", "Cameo", "Autograph", "Billboard", "Red-carpet", "Blockbuster", "Glitz", "Glamour", "Gossip", "Icon"],
+        advertising: ["Slogan", "Billboard", "Commercial", "Mascot", "Jingles", "Logo", "Campaign", "Poster", "Brochure", "Flyer", "Banner", "Pitch", "Target", "Demographic", "Headline", "Copywriting", "Branding", "Buzzword", "Gimmick", "Hype", "Infomercial", "Endorsement", "Sponsor", "Placement", "Pamphlet", "Merchandising", "Publicity", "Promotion", "Coupon", "Discount", "Giveaway", "Freebie", "Sample", "Classified", "Spam", "Pop-up", "Clickbait", "Click-through", "Impressions", "Reach", "Engagement", "Conversion", "Strategy", "Concept", "Tagline", "Trademark", "Copyright", "Patent", "Launch", "Teaser", "Trailer", "Premiere", "Showcase", "Exhibition", "Expo", "Newsletter", "Mailer", "Catalog", "Telemarketing", "Cold-call", "Pitchman", "Spokesperson", "Ambassador", "Testimonial", "Review", "Rating", "Stars", "Survey", "Feedback", "Questionnaire", "Focus-group", "Market-research", "Trend", "Fad", "Craze", "Novelty", "Premium", "Luxury", "Budget", "Economy", "Wholesale", "Retail", "Consumer", "Buyer", "Customer", "Client", "Vendor", "Supplier", "Merchant", "Storefront", "Window-shopping", "Supermarket", "Boutique", "Outlets", "Clearance", "Liquidation", "Auction", "Sensation"],
+        brands: ["Nike", "Apple", "Google", "Lego", "Coca-Cola", "Pepsi", "McDonald’s", "Starbucks", "Amazon", "Microsoft", "Nintendo", "Sony", "Samsung", "Toyota", "Ford", "Tesla", "Disney", "Netflix", "Adidas", "Puma", "Reebok", "Rolex", "Gucci", "Chanel", "Prada", "Louis-Vuitton", "Supreme", "Ikea", "Target", "Walmart", "eBay", "Ferrari", "Porsche", "BMW", "Mercedes", "Audi", "Honda", "Harley-Davidson", "Hasbro", "Mattel", "Barbie", "Hot-Wheels", "Crayola", "Sharpie", "Post-it", "Xerox", "Polaroid", "Kodak", "Canon", "Nikon", "Gillette", "Dove", "Colgate", "Crest", "Heinz", "Kellogg’s", "Oreos", "Doritos", "Pringles", "Red-Bull", "Monster", "Gatorade", "Visa", "Mastercard", "Paypal", "Uber", "Airbnb", "Spotify", "YouTube", "TikTok", "Instagram", "Snapchat", "Pinterest", "LinkedIn", "Facebook", "Twitter", "Reddit", "Skype", "Zoom", "Adobe", "Photoshop", "Windows", "Android", "PlayStation", "Xbox", "Sega", "Atari", "GameBoy", "Cadillac", "Jeep", "Subway", "Wendy’s", "Burger-King", "Domino’s", "Pizza-Hut", "KFC", "Levi’s", "Converse", "Vans"],
+        music: ["Melody", "Rhythm", "Harmony", "Beat", "Tempo", "Lyrics", "Chorus", "Verse", "Bridge", "Outro", "Intro", "Solo", "Duet", "Trio", "Quartet", "Band", "Choir", "Orchestra", "Symphony", "Concert", "Gig", "Festival", "Album", "Track", "Single", "Playlist", "Remix", "Cover", "Vinyl", "Cassette", "CD", "MP3", "Streaming", "Radio", "Podcast", "Microphone", "Amplifier", "Speaker", "Headphones", "Earbuds", "Guitar", "Piano", "Drums", "Bass", "Violin", "Flute", "Saxophone", "Trumpet", "Keyboard", "Synthesizer", "Accordion", "Harmonica", "Ukulele", "Banjo", "Harp", "Cello", "Trombone", "Clarinet", "Opera", "Musical", "Broadway", "Jazz", "Blues", "Rock", "Pop", "Rap", "Hip-hop", "Country", "Classical", "Reggae", "Metal", "Punk", "Disco", "Techno", "EDM", "Funk", "Soul", "Gospel", "Folk", "R&B", "Ska", "Grunge", "Indie", "Acoustic", "Electric", "Instrument", "Vocalist", "Rapper", "Drummer", "Guitarist", "Pianist", "Composer", "Conductor", "Producer", "Encore", "Backstage", "Tour", "Stage", "Karaoke"],
+        animals: ["Lion", "Tiger", "Bear", "Elephant", "Giraffe", "Zebra", "Kangaroo", "Koala", "Panda", "Leopard", "Cheetah", "Jaguar", "Wolf", "Fox", "Coyote", "Monkey", "Chimpanzee", "Gorilla", "Orangutan", "Sloth", "Hippo", "Rhino", "Crocrocodile", "Alligator", "Lizard", "Chameleon", "Snake", "Turtle", "Tortoise", "Frog", "Toad", "Salamander", "Dolphin", "Whale", "Shark", "Octopus", "Squid", "Jellyfish", "Starfish", "Crab", "Lobster", "Shrimp", "Seal", "Walrus", "Otter", "Penguin", "Eagle", "Hawk", "Falcon", "Owl", "Parrot", "Flamingo", "Peacock", "Swan", "Duck", "Goose", "Chicken", "Turkey", "Pigeon", "Dove", "Crow", "Raven", "Sparrow", "Robin", "Hummingbird", "Butterfly", "Moth", "Bee", "Wasp", "Ant", "Beetle", "Dragonfly", "Grasshopper", "Cricket", "Spider", "Scorpion", "Centipede", "Deer", "Moose", "Elk", "Caribou", "Camel", "Llama", "Alpaca", "Horse", "Donkey", "Cow", "Bull", "Sheep", "Goat", "Pig", "Dog", "Cat", "Rabbit", "Hamster", "Guinea-pig", "Mouse", "Rat", "Squirrel"],
+        geography: ["Mountain", "Valley", "River", "Lake", "Ocean", "Sea", "Gulf", "Bay", "Island", "Peninsula", "Continent", "Country", "State", "City", "Capital", "Town", "Village", "Desert", "Oasis", "Jungle", "Rainforest", "Forest", "Woods", "Swamp", "Marsh", "Tundra", "Prairie", "Savannah", "Canyon", "Gorge", "Cliff", "Volcano", "Crater", "Glacier", "Iceberg", "Waterfall", "Geyser", "Cave", "Cavern", "Beach", "Coast", "Shore", "Reef", "Atoll", "Archipelago", "Strait", "Canal", "Delta", "Estuary", "Plateau", "Plain", "Hill", "Ridge", "Peak", "Summit", "Equator", "Latitude", "Longitude", "Meridian", "Hemisphere", "Horizon", "Compass", "Atlas", "Globe", "Map", "Border", "Boundary", "Frontier", "Region", "Zone", "Territory", "Province", "County", "District", "Suburb", "Metropolis", "Megalopolis", "Landmark", "Monument", "Altitude", "Elevation", "Topography", "Terrain", "Landscape", "Scenery", "Vista", "Viewpoint", "Panorama", "GPS", "Coordinates", "Navigation", "Exploration", "Expedition", "Voyage", "Journey", "Travel", "Tourism", "Migration", "Settlement", "Population"],
+        videoGames: ["Mario", "Zelda", "Link", "Bowser", "Yoshi", "Sonic", "Tails", "Knuckles", "Eggman", "Pikachu", "Charizard", "Mewtwo", "Eevee", "Minecraft", "Steve", "Creeper", "Enderman", "Fortnite", "Jonesy", "Peely", "Pac-Man", "Ghost", "Tetris", "Block", "Pong", "Atari", "Nintendo", "PlayStation", "Xbox", "Sega", "GameBoy", "Console", "Controller", "Joystick", "Button", "Trigger", "D-pad", "Headset", "Keyboard", "Mouse", "Screen", "Monitor", "Graphics", "Pixels", "Polygon", "Texture", "Engine", "Code", "Bug", "Glitch", "Patch", "Update", "DLC", "Mod", "Level", "Stage", "World", "Map", "Mission", "Quest", "Campaign", "Story", "Cutscene", "Dialogue", "Choice", "Ending", "Player", "Gamer", "Avatar", "Character", "Hero", "Villain", "Boss", "Minion", "NPC", "Enemy", "Rival", "Team", "Clan", "Guild", "Party", "Lobby", "Server", "Ping", "Lag", "Framerate", "Resolution", "Audio", "Soundtracks", "Streamer", "Speedrun", "Achievement", "Trophy", "Leaderboard", "Rank", "Score", "High-score", "Combo", "Respawn", "Checkpoint"],
+        sports: ["Football", "Soccer", "Basketball", "Baseball", "Softball", "Tennis", "Badminton", "Squash", "Racquetball", "Volleyball", "Hockey", "Lacrosse", "Rugby", "Cricket", "Golf", "Bowling", "Billiards", "Pool", "Snooker", "Darts", "Curling", "Skiing", "Snowboarding", "Sledding", "Bobsled", "Ice-skating", "Figure-skating", "Roller-skating", "Skateboarding", "Surfing", "Windsurfing", "Kitesurfing", "Wakeboarding", "Water-skiing", "Swimming", "Diving", "Rowing", "Kayaking", "Canoeing", "Sailing", "Fishing", "Hunting", "Archery", "Shooting", "Fencing", "Boxing", "Wrestling", "Karate", "Taekwondo", "Judo", "Kung-fu", "MMA", "Kickboxing", "Muay-Thai", "Jiu-jitsu", "Gymnastics", "Acrobatics", "Trampoline", "Cheerleading", "Dance", "Ballet", "Running", "Sprinting", "Jogging", "Walking", "Hiking", "Mountaineering", "Climbing", "Cycling", "Mountain-biking", "BMX", "Motocross", "Auto-racing", "Karting", "Horseback-riding", "Rodeo", "Polo", "Frisbee", "Disc-golf", "Dodgeball", "Kickball", "Handball", "Netball", "Rounders", "Hurling", "Gaelic-football", "Aussie-rules", "Weightlifting", "Powerlifting", "Bodybuilding", "Crossfit", "Yoga", "Pilates", "Aerobics", "Marathon", "Triathlon", "Decathlon", "Pentathlon", "Heptathlon", "Olympics"],
+        technology: ["Computer", "Laptop", "Tablet", "Smartphone", "Smartwatch", "Television", "Monitor", "Screen", "Display", "Resolution", "Pixels", "Processor", "CPU", "GPU", "RAM", "Hard-drive", "SSD", "Flash-drive", "Memory-card", "Motherboard", "Keyboard", "Mouse", "Trackpad", "Touchscreen", "Stylus", "Printer", "Scanner", "Copier", "Projector", "Speaker", "Microphone", "Headphones", "Earbuds", "Webcam", "Camera", "Lens", "Sensor", "Battery", "Charger", "Cable", "Adapter", "Wi-Fi", "Bluetooth", "Cellular", "Internet", "Network", "Router", "Modem", "Server", "Cloud", "Storage", "Backup", "Data", "Database", "Software", "Application", "App", "Program", "Operating-system", "Windows", "macOS", "Linux", "Android", "iOS", "Browser", "Website", "Webpage", "Link", "URL", "Domain", "Hosting", "Coding", "Programming", "Script", "Algorithm", "AI", "Robot", "Automation", "Cybersecurity", "Encryption", "Password", "Biometrics", "Firewall", "Antivirus", "Malware", "Virus", "Hacker", "Phishing", "Spam", "Update", "Upgrade", "Patch", "Bug", "Glitch", "Crash", "Reboot", "Interface", "Dashboard", "Widget", "Gadget"],
+        foodDrink: ["Pizza", "Burger", "Taco", "Burrito", "Sushi", "Sashimi", "Ramen", "Noodles", "Pasta", "Spaghetti", "Lasagna", "Macaroni", "Cheese", "Butter", "Milk", "Cream", "Yogurt", "Ice-cream", "Gelato", "Sorbet", "Cake", "Cupcake", "Muffin", "Donut", "Pastry", "Croissant", "Bread", "Toast", "Bagel", "Sandwich", "Wrap", "Salad", "Soup", "Stew", "Chili", "Rice", "Quinoa", "Oats", "Cereal", "Pancake", "Waffle", "Bacon", "Sausage", "Egg", "Omelet", "Steak", "Chicken", "Turkey", "Pork", "Ham", "Beef", "Lamb", "Salmon", "Tuna", "Shrimp", "Crab", "Lobster", "Potato", "Fries", "Chips", "Nachos", "Popcorn", "Pretzel", "Cracker", "Cookie", "Brownie", "Pie", "Tart", "Chocolate", "Candy", "Caramel", "Honey", "Syrup", "Jam", "Jelly", "Peanut-butter", "Coffee", "Espresso", "Latte", "Cappuccino", "Tea", "Matcha", "Chai", "Juice", "Smoothie", "Milkshake", "Soda", "Cola", "Lemonade", "Water", "Beer", "Wine", "Champagne", "Cider", "Cocktail", "Mocktail", "Whiskey", "Vodka", "Rum", "Tequila"]
     };
 
     let activePool = [];
@@ -693,7 +545,6 @@
     let p1Name = "Player 1";
     let p2Name = "Player 2";
 
-    // AUDIO CHANNELS (Default Load Balanced to 10%)
     let isMuted = false;
     const countdownAudio = new Audio(BASE_URL + 'Assets/countdown.mp3');
     const passAudio = new Audio(BASE_URL + 'Assets/pass.mp3');
@@ -705,11 +556,19 @@
     selectCategory('random');
     applyAudioSettings();
 
+    window.addEventListener('click', function initLobbyMusic() {
+        if (!gameActive && lobbyAudio.paused && !isMuted) {
+            lobbyAudio.play().catch(e => {});
+        }
+        window.removeEventListener('click', initLobbyMusic);
+    });
+
     function toggleSettingsPanel(show) {
         if (gameActive && show) return; 
         document.getElementById('settings-panel').style.display = show ? 'flex' : 'none';
     }
 
+    // Handles layout constraints safely on mobile targets
     function toggleInfoPanel(show) {
         document.getElementById('info-panel').style.display = show ? 'flex' : 'none';
     }
@@ -773,6 +632,12 @@
         if (gameActive) updateTurnUI();
     }
 
+    window.addEventListener('keydown', function(e) {
+        if (!gameActive) return;
+        if (e.key === 'd' || e.key === 'D') passTurn(1);
+        if (e.key === 'k' || e.key === 'K') passTurn(2);
+    });
+
     function triggerSubtleImpact(playerNum) {
         const targetBtn = playerNum === 1 ? document.getElementById('p1-btn') : document.getElementById('p2-btn');
         const flashClass = playerNum === 1 ? 'btn-flash-white' : 'btn-flash-purple';
@@ -790,7 +655,6 @@
         if (gameActive) return;
 
         document.getElementById('start-btn').disabled = true;
-        document.getElementById('card-image').style.display = "none";
         
         lobbyAudio.pause();
         lobbyAudio.currentTime = 0;
@@ -874,7 +738,6 @@
         document.getElementById('p1-btn').disabled = true;
         document.getElementById('p2-btn').disabled = true;
         document.getElementById('start-btn').disabled = false;
-        document.getElementById('card-image').style.display = "none";
 
         if (activePlayer === 1) {
             p2Score++;
