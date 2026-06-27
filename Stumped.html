@@ -540,7 +540,6 @@
     let maxRoundTime = 20, timeLeft = 20, timerId = null, gameActive = false;
     let p1Name = "Player 1", p2Name = "Player 2", isMuted = false;
 
-    // Create the HTML5 audio buffers globally
     const countdownAudio = new Audio(BASE_URL + 'countdown.mp3');
     const passAudio = new Audio(BASE_URL + 'pass.mp3');
     const lobbyAudio = new Audio(BASE_URL + 'lobby.mp3'); lobbyAudio.loop = true;
@@ -551,29 +550,56 @@
     selectCategory('random');
     applyAudioSettings();
 
-    // Universal iOS "Wake Up Call" engine
+    // Responsive iOS audio pipeline setup
     function wakeUpMobileAudio() {
         if (audioWokenUp) return;
         
-        // Playing and instantly pausing lets mobile Safari/Chrome download and cache paths securely
-        countdownAudio.play().then(() => countdownAudio.pause()).catch(() => {});
-        passAudio.play().then(() => passAudio.pause()).catch(() => {});
-        lobbyAudio.play().then(() => lobbyAudio.pause()).catch(() => {});
-        gameplayAudio.play().then(() => gameplayAudio.pause()).catch(() => {});
+        // Mobile browsers block simultaneous loads. We explicitly fetch them muted
+        // to prevent mixing distortion and immediate playback overlapping.
+        const originalMusicVol = lobbyAudio.volume;
+        const originalSfxVol = countdownAudio.volume;
+
+        lobbyAudio.volume = 0;
+        gameplayAudio.volume = 0;
+        countdownAudio.volume = 0;
+        passAudio.volume = 0;
+
+        // Wake up each buffer safely without executing instant playback chains
+        lobbyAudio.play().then(() => {
+            lobbyAudio.pause();
+            lobbyAudio.currentTime = 0;
+            lobbyAudio.volume = originalMusicVol;
+            if (!gameActive && !isMuted) lobbyAudio.play().catch(() => {});
+        }).catch(() => {});
+
+        gameplayAudio.play().then(() => {
+            gameplayAudio.pause();
+            gameplayAudio.currentTime = 0;
+            gameplayAudio.volume = originalMusicVol;
+        }).catch(() => {});
+
+        countdownAudio.play().then(() => {
+            countdownAudio.pause();
+            countdownAudio.currentTime = 0;
+            countdownAudio.volume = originalSfxVol;
+        }).catch(() => {});
+
+        passAudio.play().then(() => {
+            passAudio.pause();
+            passAudio.currentTime = 0;
+            passAudio.volume = originalSfxVol;
+        }).catch(() => {});
         
         audioWokenUp = true;
-        
-        // Start lobby loop instantly once allowed
-        if (!gameActive && !isMuted) {
-            lobbyAudio.play().catch(e => {});
-        }
+
+        window.removeEventListener('click', wakeUpMobileAudio);
+        window.removeEventListener('touchstart', wakeUpMobileAudio);
     }
 
-    // Attach user listeners to wake up audio on first touch
     window.addEventListener('click', wakeUpMobileAudio);
     window.addEventListener('touchstart', wakeUpMobileAudio);
 
-    // Native App Visibility State Tracker (fixes locking screen/app switching)
+    // Visibility state switch tracker logic
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
             lobbyAudio.pause();
@@ -681,7 +707,7 @@
 
         document.getElementById('start-btn').disabled = true;
 
-        // Force clear layout audio lines completely
+        // Clean kill on the lobby track before starting countdown sounds
         lobbyAudio.pause();
         lobbyAudio.currentTime = 0;
 
@@ -707,10 +733,10 @@
     function runGameTimer() {
         if (document.hidden) return; 
         
-        // Clean cycle trigger sequence handles mobile stream swaps natively
+        // Safe channel initialization pattern prevents mobile distortion overlaps
         gameplayAudio.pause();
         gameplayAudio.currentTime = 0;
-        if (!isMuted) {
+        if (!isMuted && audioWokenUp) {
             gameplayAudio.play().catch(e => {});
         }
 
@@ -768,7 +794,7 @@
         gameplayAudio.pause();
         gameplayAudio.currentTime = 0;
         
-        if (!isMuted && !document.hidden) {
+        if (!isMuted && !document.hidden && audioWokenUp) {
             lobbyAudio.currentTime = 0;
             lobbyAudio.play().catch(e => {});
         }
