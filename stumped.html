@@ -508,15 +508,15 @@
         <div class="setting-row">
             <label for="music-volume">MUSIC VOLUME</label>
             <div class="setting-control">
-                <input type="range" id="music-volume" class="setting-slider" min="0" max="100" value="50" oninput="applyAudioSettings()">
-                <span id="music-vol-val" class="setting-value">50%</span>
+                <input type="range" id="music-volume" class="setting-slider" min="0" max="100" value="10" oninput="applyAudioSettings()">
+                <span id="music-vol-val" class="setting-value">10%</span>
             </div>
         </div>
 
         <div class="setting-row">
             <label for="sfx-volume">SOUND EFFECTS VOLUME</label>
             <div class="setting-control">
-                <input type="range" id="sfx-volume" class="setting-slider" min="0" max="100" value="75" oninput="applyAudioSettings()">
+                <input type="range" id="sfx-volume" class="setting-slider" min="0" max="100" value="35" oninput="applyAudioSettings()">
                 <span id="sfx-vol-val" class="setting-value">75%</span>
             </div>
         </div>
@@ -713,8 +713,8 @@
         document.getElementById('music-vol-val').innerText = musicVol + "%";
         document.getElementById('sfx-vol-val').innerText = sfxVol + "%";
 
-        lobbyAudio.volume = musicVol / 125;
-        gameplayAudio.volume = musicVol / 125;
+        lobbyAudio.volume = musicVol / 100;
+        gameplayAudio.volume = musicVol / 100;
         applauseAudio.volume = musicVol / 100;
         countdownAudio.volume = sfxVol / 100;
         passAudio.volume = sfxVol / 100;
