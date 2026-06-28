@@ -50,7 +50,7 @@
             100% { transform: translate(0, 0); }
         }
 
-        /* Interactive Action Icons (Cog & Info) */
+        /* Interactive Action Icons (Cog, Info, Mute) */
         #settings-cog {
             position: absolute;
             top: 15px;
@@ -76,6 +76,23 @@
             transition: transform 0.2s ease;
         }
         #info-icon:hover {
+            transform: scale(1.1);
+        }
+
+        #mute-toggle {
+            position: absolute;
+            top: 89px;
+            right: 15px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 20px;
+            line-height: 28px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        #mute-toggle:hover {
             transform: scale(1.1);
         }
 
@@ -219,7 +236,7 @@
             background: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
             padding: 10px;
-            max-height: 90px;
+            max-height: 70px;
             overflow-y: auto;
             text-align: left;
             font-size: 11px;
@@ -508,6 +525,8 @@
 <div id="game-box">
     <img id="settings-cog" src="Assets/settings.png" alt="Settings" onclick="toggleSettingsPanel(true)">
     <img id="info-icon" src="Assets/info.png" alt="How to Play Guide" onclick="toggleInfoPanel(true)">
+    
+    <div id="mute-toggle" onclick
 
     <div id="celebration-panel">
         <img id="celebration-gif" src="Assets/celebration.gif" alt="Celebration!">
